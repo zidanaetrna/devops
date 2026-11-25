@@ -108,17 +108,40 @@ Web ini udah berbentuk portofolio. Semua isinya ada di `index.html`, tinggal gan
 
 | Mau ganti | Di mana |
 |---|---|
-| Nama, judul tab | `index.html`: `<title>` sama `<h1 class="hero__name">` |
-| Kata yang ngetik sendiri | `index.html`: atribut `data-roles`, pisahin pakai koma |
-| Bio, paragraf Tentang | `index.html`: bagian `HERO` sama `TENTANG` |
-| Angka statistik | `index.html`: atribut `data-count` |
-| Daftar skill | `index.html`: `<li>` di dalam `marquee__track` |
-| Proyek | `index.html`: copy satu `<article class="card">` buat nambah |
-| Link email, GitHub, LinkedIn | `index.html`: bagian `KONTAK` |
-| Warna | `src/style.css`: `--accent` sama `--accent-2` di paling atas |
-| Inisial di pojok kiri atas | `index.html`: `nav__logo` |
+| Nama, judul tab | `index.html`: `<title>` sama `<h1 class="hero__name">`. Kata di dalam `<em>` jadi miring dan berwarna |
+| Nama di pojok kiri atas | `index.html`: `top__name` |
+| Kota di jam header | `index.html`: `top__clock` |
+| Bio sama info singkat | `index.html`: bagian `PEMBUKA` |
+| Proyek | `index.html`: bagian `KARYA`, satu proyek = satu `<li>`. Copy buat nambah |
+| Foto latar pembuka | `index.html`: `src` di dalam `hero__media`. Pilih foto yang bawahnya gelap |
+| Foto latar tiap proyek | Taruh file di `public/images/`, terus ganti `data-image="/images/nama-file.webp"`. Kosongin kalau nggak mau |
+| Paragraf dan daftar Tentang | `index.html`: bagian `TENTANG` |
+| Email dan link sosmed | `index.html`: bagian `KONTAK` |
+| Warna aksen | `src/style.css`: `--accent` di paling atas |
+| Warna kertas sama tinta | `src/style.css`: `--paper` sama `--ink` |
 
-Animasinya (background bergerak, teks ngetik, elemen muncul pas di-scroll, angka ngitung naik, cahaya di kartu) otomatis mati buat orang yang nyalain "kurangi animasi" di HP/laptopnya.
+Yang bikin web ini kerasa halus:
+- Scroll pakai inertia ([Lenis](https://github.com/darkroomengineering/lenis))
+- Judul muncul per kata, naik dari balik garis
+- Foto pembuka geser lebih lambat dari scroll, teksnya pelan-pelan memudar
+- Hover satu proyek, latar section Karya berganti jadi foto proyek itu
+- Email sama tombol "Ke atas" ketarik dikit ke arah kursor
+
+Semua animasi itu otomatis mati buat orang yang nyalain "kurangi animasi" di HP/laptopnya. Foto latar proyek nggak muncul di HP, soalnya nggak ada hover.
+
+Tips gambar: simpan dalam format WebP ukuran 1920×1080, usahain di bawah 400 KB per file biar web tetap enteng.
+
+### Foto bawaan
+
+Semua dari [Unsplash](https://unsplash.com/license), gratis dipakai tanpa izin. Ganti sama foto kalian sendiri kapan aja.
+
+| File | Sumber |
+|---|---|
+| `langit-gunung.webp` | [Bima Sakti di atas pegunungan](https://unsplash.com/photos/milky-way-over-dark-mountain-silhouette-mRdcesxcIHY) |
+| `bumi-satelit.webp` | [Bumi dan satelit](https://unsplash.com/photos/view-of-earth-and-satellite-yZygONrUBe8) |
+| `gunung-es.webp` | [Gunung es di bawah langit berbintang](https://unsplash.com/photos/icy-mountains-under-starry-night-nI7knd5sQfo) |
+| `bumi-afrika.webp` | [Bumi dengan awan di atas Afrika](https://unsplash.com/photos/earth-with-clouds-above-the-african-continent-vhSz50AaFAs) |
+| `bulan-gunung.webp` | [Bulan terbenam di atas pegunungan](https://unsplash.com/photos/the-moon-is-setting-in-the-sky-over-the-mountains-TLxLwdHL2PU) |
 
 ## Pakai project kalian sendiri
 

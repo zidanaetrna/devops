@@ -1,109 +1,143 @@
+import Lenis from 'lenis'
+import 'lenis/dist/lenis.css'
+import '@fontsource/instrument-serif/400.css'
+import '@fontsource/instrument-serif/400-italic.css'
+
 // Waktu build ditanem pas `npm run build`, jadi tiap deploy baru angkanya berubah.
 // Gampang buat ngecek: "web gua udah ke-update belum?"
 document.getElementById('build-time').textContent = __BUILD_TIME__
 document.getElementById('year').textContent = new Date().getFullYear()
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
 
-// ---------- Elemen muncul pas di-scroll ----------
-// Elemen yang sebaris (satu parent) munculnya gantian, jeda 0.1 detik.
-const revealEls = document.querySelectorAll('[data-reveal]')
-const siblingIndex = new Map()
+// ---------- Jam lokal di header ----------
+const clock = document.getElementById('clock')
+const tickClock = () => {
+  clock.textContent = new Date().toLocaleTimeString('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Jakarta',
+  })
+}
+tickClock()
+setInterval(tickClock, 10_000)
+
+// ---------- Scroll halus (inertia) pakai Lenis ----------
+let lenis = null
+if (!reduceMotion) {
+  lenis = new Lenis({ autoRaf: true, anchors: true, lerp: 0.09 })
+}
+
+// ---------- Pecah teks jadi per kata ----------
+// Tiap kata dibungkus dua <span>: luar buat "jendela", dalam yang naik.
+// Tag di dalamnya (misal <em>) tetap dipertahanin.
+function splitWords(root) {
+  let i = 0
+  const walk = (node) => {
+    ;[...node.childNodes].forEach((child) => {
+      if (child.nodeType === Node.ELEMENT_NODE) return walk(child)
+      if (child.nodeType !== Node.TEXT_NODE) return
+      const frag = document.createDocumentFragment()
+      child.textContent.split(/(\s+)/).forEach((part) => {
+        if (!part) return
+        if (/^\s+$/.test(part)) return frag.append(' ')
+        const outer = document.createElement('span')
+        const inner = document.createElement('span')
+        outer.className = 'word'
+        inner.textContent = part
+        inner.style.setProperty('--i', i++)
+        outer.append(inner)
+        frag.append(outer)
+      })
+      child.replaceWith(frag)
+    })
+  }
+  walk(root)
+  root.classList.add('is-split')
+}
+document.querySelectorAll('[data-split]').forEach(splitWords)
+
+// ---------- Muncul pas di-scroll ----------
+// Elemen yang satu parent munculnya gantian, jeda 0.08 detik.
+const revealEls = document.querySelectorAll('[data-reveal], [data-split]')
+const order = new Map()
 revealEls.forEach((el) => {
-  const i = siblingIndex.get(el.parentElement) ?? 0
-  el.style.setProperty('--delay', `${i * 0.1}s`)
-  siblingIndex.set(el.parentElement, i + 1)
+  if (!el.hasAttribute('data-reveal')) return
+  const parent = el.closest('ul, .columns, .hero__meta') ?? el.parentElement
+  const i = order.get(parent) ?? 0
+  el.style.setProperty('--delay', `${i * 0.08}s`)
+  order.set(parent, i + 1)
 })
 
-const revealObserver = new IntersectionObserver(
+const observer = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return
       entry.target.classList.add('is-visible')
-      revealObserver.unobserve(entry.target)
+      observer.unobserve(entry.target)
     })
   },
-  { threshold: 0.15 }
+  { threshold: 0.2, rootMargin: '0px 0px -5% 0px' }
 )
-revealEls.forEach((el) => revealObserver.observe(el))
+revealEls.forEach((el) => observer.observe(el))
 
-// ---------- Navbar jadi kaca pas di-scroll ----------
-const nav = document.querySelector('.nav')
-const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 20)
-onScroll()
-window.addEventListener('scroll', onScroll, { passive: true })
-
-// ---------- Teks yang ngetik sendiri ----------
-const typed = document.querySelector('.typed')
-const roles = typed.dataset.roles.split(',').map((r) => r.trim()).filter(Boolean)
-
-if (!reduceMotion && roles.length > 1) {
-  let roleIndex = 0
-  let charIndex = roles[0].length
-  let deleting = true
-
-  const tick = () => {
-    const word = roles[roleIndex]
-    charIndex += deleting ? -1 : 1
-    typed.textContent = word.slice(0, charIndex)
-
-    let wait = deleting ? 40 : 80
-    if (!deleting && charIndex === word.length) {
-      deleting = true
-      wait = 1800
-    } else if (deleting && charIndex === 0) {
-      deleting = false
-      roleIndex = (roleIndex + 1) % roles.length
-      wait = 300
-    }
-    setTimeout(tick, wait)
-  }
-  setTimeout(tick, 2200)
-}
-
-// ---------- Angka statistik ngitung naik ----------
-const countObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return
-      const el = entry.target
-      const target = Number(el.dataset.count)
-      countObserver.unobserve(el)
-
-      if (reduceMotion) {
-        el.textContent = target
-        return
-      }
-      const start = performance.now()
-      const duration = 1400
-      const step = (now) => {
-        const t = Math.min((now - start) / duration, 1)
-        const eased = 1 - Math.pow(1 - t, 3)
-        el.textContent = Math.round(target * eased)
-        if (t < 1) requestAnimationFrame(step)
-      }
-      requestAnimationFrame(step)
+// ---------- Pembuka: foto geser lebih lambat dari scroll (parallax) ----------
+// Fotonya turun pelan, teksnya ikut geser dikit sambil memudar.
+const heroImg = document.querySelector('.hero__media img')
+const heroText = document.querySelectorAll('.hero__name, .hero__meta')
+if (lenis && heroImg) {
+  lenis.on('scroll', ({ scroll }) => {
+    const h = window.innerHeight
+    if (scroll > h * 1.2) return
+    heroImg.style.transform = `translate3d(0, ${scroll * 0.3}px, 0)`
+    heroText.forEach((el) => {
+      el.style.transform = `translate3d(0, ${scroll * 0.12}px, 0)`
+      el.style.opacity = String(Math.max(0, 1 - scroll / (h * 0.8)))
     })
-  },
-  { threshold: 0.6 }
-)
-document.querySelectorAll('[data-count]').forEach((el) => countObserver.observe(el))
-
-// ---------- Marquee skill: daftar diduplikat biar muternya nyambung ----------
-const track = document.querySelector('.marquee__track')
-if (track) {
-  track.querySelectorAll('li').forEach((li) => {
-    const copy = li.cloneNode(true)
-    copy.setAttribute('aria-hidden', 'true')
-    track.appendChild(copy)
   })
 }
 
-// ---------- Cahaya di kartu ngikutin kursor ----------
-document.querySelectorAll('.card').forEach((card) => {
-  card.addEventListener('pointermove', (e) => {
-    const rect = card.getBoundingClientRect()
-    card.style.setProperty('--mx', `${e.clientX - rect.left}px`)
-    card.style.setProperty('--my', `${e.clientY - rect.top}px`)
+// ---------- Karya: latar section ganti jadi foto proyek yang di-hover ----------
+const worksSection = document.querySelector('.works-section')
+const worksMedia = document.querySelector('.works__media')
+const works = document.querySelector('.works')
+if (finePointer && worksSection && worksMedia && works) {
+  works.querySelectorAll('.work').forEach((work) => {
+    const src = work.dataset.image
+    if (!src) return
+    // Satu <img> per proyek, ditumpuk. Yang aktif tinggal dimunculin.
+    const img = document.createElement('img')
+    img.src = src
+    img.alt = ''
+    img.decoding = 'async'
+    worksMedia.append(img)
+
+    work.addEventListener('pointerenter', () => {
+      worksMedia.querySelectorAll('img').forEach((el) => el.classList.toggle('is-active', el === img))
+      worksSection.classList.add('is-lit')
+    })
   })
-})
+
+  works.addEventListener('pointerleave', () => {
+    worksSection.classList.remove('is-lit')
+    worksMedia.querySelectorAll('img').forEach((el) => el.classList.remove('is-active'))
+  })
+}
+
+// ---------- Elemen "magnetik": ketarik dikit ke arah kursor ----------
+if (finePointer && !reduceMotion) {
+  document.querySelectorAll('.magnetic').forEach((el) => {
+    el.addEventListener('pointermove', (e) => {
+      // Geserannya dibatesin maksimal 14px, biar elemen gede (kayak email) nggak kabur dari layar
+      const r = el.getBoundingClientRect()
+      const clamp = (v) => Math.max(-14, Math.min(14, v))
+      const x = clamp((e.clientX - (r.left + r.width / 2)) * 0.2)
+      const y = clamp((e.clientY - (r.top + r.height / 2)) * 0.3)
+      el.style.transform = `translate(${x}px, ${y}px)`
+    })
+    el.addEventListener('pointerleave', () => {
+      el.style.transform = ''
+    })
+  })
+}
