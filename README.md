@@ -102,6 +102,24 @@ Di GitHub, klik **Compare & pull request** → **Create pull request**. Workflow
 
 Klik **Merge pull request**. Workflow jalan lagi di `main`, kali ini sampai deploy.
 
+## Jadiin portofolio kalian
+
+Web ini udah berbentuk portofolio. Semua isinya ada di `index.html`, tinggal ganti teksnya. Tiap bagian udah dikasih komentar.
+
+| Mau ganti | Di mana |
+|---|---|
+| Nama, judul tab | `index.html`: `<title>` sama `<h1 class="hero__name">` |
+| Kata yang ngetik sendiri | `index.html`: atribut `data-roles`, pisahin pakai koma |
+| Bio, paragraf Tentang | `index.html`: bagian `HERO` sama `TENTANG` |
+| Angka statistik | `index.html`: atribut `data-count` |
+| Daftar skill | `index.html`: `<li>` di dalam `marquee__track` |
+| Proyek | `index.html`: copy satu `<article class="card">` buat nambah |
+| Link email, GitHub, LinkedIn | `index.html`: bagian `KONTAK` |
+| Warna | `src/style.css`: `--accent` sama `--accent-2` di paling atas |
+| Inisial di pojok kiri atas | `index.html`: `nav__logo` |
+
+Animasinya (background bergerak, teks ngetik, elemen muncul pas di-scroll, angka ngitung naik, cahaya di kartu) otomatis mati buat orang yang nyalain "kurangi animasi" di HP/laptopnya.
+
 ## Pakai project kalian sendiri
 
 Bisa, asal project-nya di-build pakai `npm run build` dan hasilnya web statis (HTML/CSS/JS).

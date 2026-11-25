@@ -1,56 +1,549 @@
 :root {
-  /* 3) Mau lebih seru? Ganti warna di sini */
-  --bg: #12161f;
-  --fg: #f5f3ee;
-  --accent: #f38020;
-  --muted: #b9c0cc;
+  /* 3) Mau lebih seru? Ganti warna di sini. Semua warna di web ngikut dua baris ini */
+  --accent: #7c5cff;
+  --accent-2: #22d3ee;
+
+  --bg: #0b0d14;
+  --surface: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.09);
+  --fg: #f3f4f8;
+  --muted: #9aa3b5;
+
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
   background: var(--bg);
   color: var(--fg);
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  padding: 24px;
+  font-family: var(--sans);
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
-main {
-  max-width: 720px;
+a {
+  color: inherit;
 }
 
-.tag {
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ---------- Background aurora ---------- */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.aurora span {
+  position: absolute;
+  width: 55vmax;
+  height: 55vmax;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.35;
+  animation: drift 22s var(--ease) infinite alternate;
+}
+
+.aurora span:nth-child(1) {
+  background: var(--accent);
+  top: -20vmax;
+  left: -15vmax;
+}
+
+.aurora span:nth-child(2) {
+  background: var(--accent-2);
+  bottom: -25vmax;
+  right: -20vmax;
+  animation-delay: -7s;
+  animation-duration: 26s;
+}
+
+.aurora span:nth-child(3) {
+  background: color-mix(in srgb, var(--accent) 50%, var(--accent-2));
+  top: 40%;
+  left: 45%;
+  width: 30vmax;
+  height: 30vmax;
+  opacity: 0.2;
+  animation-delay: -12s;
+}
+
+@keyframes drift {
+  to {
+    transform: translate(12vmax, 8vmax) scale(1.15) rotate(25deg);
+  }
+}
+
+/* ---------- Navbar ---------- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px clamp(16px, 5vw, 64px);
+  transition: background 0.3s, padding 0.3s, border-color 0.3s;
+  border-bottom: 1px solid transparent;
+}
+
+.nav.is-scrolled {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background: rgba(11, 13, 20, 0.7);
+  backdrop-filter: blur(12px);
+  border-bottom-color: var(--border);
+}
+
+.nav__logo {
+  font-weight: 800;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.nav__logo span {
   color: var(--accent);
-  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
-  letter-spacing: 0.1em;
+}
+
+.nav nav {
+  display: flex;
+  gap: clamp(12px, 3vw, 32px);
+}
+
+.nav nav a {
+  position: relative;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 15px;
+  transition: color 0.2s;
+}
+
+.nav nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s var(--ease);
+}
+
+.nav nav a:hover {
+  color: var(--fg);
+}
+
+.nav nav a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------- Layout ---------- */
+main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 5vw, 64px);
+}
+
+.section {
+  padding: clamp(72px, 12vw, 140px) 0;
+}
+
+.section__title {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-size: clamp(32px, 5vw, 48px);
+  margin: 0 0 40px;
+}
+
+.section__title span {
+  font-family: var(--mono);
+  font-size: 16px;
+  color: var(--accent);
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 80px;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  color: var(--accent-2);
+  letter-spacing: 0.15em;
   text-transform: uppercase;
+  font-size: 14px;
+  margin: 0;
+}
+
+.hero__name {
+  font-size: clamp(48px, 11vw, 128px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin: 12px 0 20px;
+  background: linear-gradient(110deg, var(--fg) 30%, var(--accent) 50%, var(--accent-2) 60%, var(--fg) 80%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 6s linear infinite;
+}
+
+@keyframes shine {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -150% 0;
+  }
+}
+
+.hero__role {
+  font-family: var(--mono);
+  font-size: clamp(18px, 3vw, 26px);
+  color: var(--fg);
+  margin: 0 0 24px;
+  min-height: 1.6em;
+}
+
+.caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  margin-left: 4px;
+  vertical-align: -0.15em;
+  background: var(--accent);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.hero__bio {
+  max-width: 560px;
+  font-size: 18px;
+  color: var(--muted);
+  margin: 0 0 36px;
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ---------- Tombol ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s, background 0.25s, border-color 0.25s;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+}
+
+.btn--primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  box-shadow: 0 10px 30px -10px var(--accent);
+}
+
+.btn--primary:hover {
+  box-shadow: 0 16px 40px -10px var(--accent);
+}
+
+.btn--ghost {
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.btn--ghost:hover {
+  border-color: var(--accent);
+}
+
+/* ---------- Tentang ---------- */
+.about {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.about p {
+  font-size: 19px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.stats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stats li {
+  padding: 20px 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.stats strong {
+  display: block;
+  font-size: 36px;
+  line-height: 1.1;
+  color: var(--fg);
+}
+
+.stats span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---------- Marquee skill ---------- */
+.marquee {
+  margin-top: 64px;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.marquee__track {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  animation: marquee 28s linear infinite;
+}
+
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+.marquee__track li {
+  padding: 10px 22px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(calc(-50% - 6px));
+  }
+}
+
+/* ---------- Kartu proyek ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  --mx: 50%;
+  --my: 50%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  overflow: hidden;
+  transition: transform 0.4s var(--ease), border-color 0.3s;
+}
+
+/* Cahaya yang ngikutin kursor */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(400px circle at var(--mx) var(--my), color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card__num {
+  font-family: var(--mono);
+  color: var(--accent);
+  margin: 0 0 32px;
+}
+
+.card h3 {
+  font-size: 22px;
+  margin: 0 0 8px;
+}
+
+.card p {
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+}
+
+.tags li {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-2) 12%, transparent);
+  color: var(--accent-2);
+}
+
+.card__link {
+  margin-top: auto;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--fg);
+  transition: color 0.2s, letter-spacing 0.3s var(--ease);
+}
+
+.card__link:hover {
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Kontak ---------- */
+.contact__big {
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 800px;
+  margin: 0 0 36px;
+}
+
+.contact__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  width: min(100% - 2 * clamp(16px, 5vw, 64px), 1080px - 2 * clamp(16px, 5vw, 64px));
+  margin: 0 auto;
+  padding: 32px 0 48px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
   font-size: 14px;
 }
 
-h1 {
-  font-size: clamp(36px, 8vw, 72px);
-  line-height: 1.05;
-  margin: 8px 0 16px;
-}
-
-.msg {
-  font-size: 20px;
-  color: var(--muted);
+.footer p {
+  margin: 0;
 }
 
 .build {
-  margin-top: 48px;
-  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
-  font-size: 14px;
-  color: var(--muted);
+  font-family: var(--mono);
 }
 
 #build-time {
   color: var(--accent);
+}
+
+/* ---------- Animasi muncul pas di-scroll ----------
+   Cuma aktif kalau JavaScript jalan (class .js dipasang di main.js),
+   jadi kalau JS error, isi web tetap keliatan. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  transition-delay: var(--delay, 0s);
+}
+
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Layar kecil ---------- */
+@media (max-width: 720px) {
+  .about {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .nav nav a {
+    font-size: 14px;
+  }
+}
+
+/* Yang ngatur "kurangi animasi" di HP/laptopnya: matiin semua animasi */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
 }
