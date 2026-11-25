@@ -70,20 +70,25 @@ Repo kalian di GitHub → **Settings** → **Secrets and variables** → **Actio
 3. Tunggu sampai semua step hijau (biasanya 1–2 menit). Klik tiap step buat liat apa yang dikerjain.
 4. Buka URL Netlify kalian: `https://<nama-project>.netlify.app`. Ada juga di dashboard Netlify.
 
-## 5. Ubah, push, cek
+## 5. Ganti nama, push, cek
 
-1. Edit `index.html`: ganti isi `<title>` sama `<h1>`.
+1. Buka `index.html`, cari `<h1 class="hero__name"`, terus ganti `Nama <em>Kalian</em>` pakai nama kalian. Cukup di situ, nama di pojok kiri atas, footer, sama judul tab ikut ganti otomatis.
+
+   ```html
+   <h1 class="hero__name" data-split>Budi <em>Santoso</em></h1>
+   ```
+
 2. Push dari terminal, satu per satu:
 
 ```
 git add .
-git commit -m "ganti judul"
+git commit -m "ganti nama"
 git push
 ```
 
 Pertama kali push, Git bakal buka browser buat login GitHub. Login aja, itu normal.
 
-3. Tab **Actions** → tunggu hijau → refresh web kalian. Judul sama tulisan **Versi build** di bawahnya harus udah berubah. Kalau Versi build berubah tapi judul nggak, berarti file yang kalian edit belum ke-commit.
+3. Tab **Actions** → tunggu hijau → refresh web kalian. Nama kalian sama tulisan **Versi build** di bawah halaman harus udah berubah. Kalau Versi build berubah tapi nama nggak, berarti file yang kalian edit belum ke-commit.
 
 ## 6. Bonus: lewat branch dan Pull Request
 
