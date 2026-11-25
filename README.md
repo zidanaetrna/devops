@@ -66,7 +66,7 @@ Repo kalian di GitHub → **Settings** → **Secrets and variables** → **Actio
 ## 4. Jalanin workflow pertama kali
 
 1. Buka tab **Actions** di repo kalian.
-2. Klik run yang tadi gagal → **Re-run all jobs**. Kalau nggak ada run sama sekali: klik **Deploy ke Netlify** di kiri → **Run workflow** → **Run workflow**.
+2. Klik run yang tadi gagal → tombol **Re-run jobs** di kanan atas → **Re-run all jobs**. Kalau nggak ada run sama sekali: klik **Deploy ke Netlify** di kiri → **Run workflow** → **Run workflow**.
 3. Tunggu sampai semua step hijau (biasanya 1–2 menit). Klik tiap step buat liat apa yang dikerjain.
 4. Buka URL Netlify kalian: `https://<nama-project>.netlify.app`. Ada juga di dashboard Netlify.
 
