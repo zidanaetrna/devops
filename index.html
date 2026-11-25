@@ -13,7 +13,8 @@
   </head>
   <body>
     <header class="top">
-      <a class="top__name" href="#awal">Nama Kalian</a>
+      <!-- Nama di sini otomatis ngikut <h1> di bawah, nggak usah diganti -->
+      <a class="top__name" href="#awal" data-name>Nama Kalian</a>
       <!-- Jam lokal. Ganti kotanya kalau bukan di Serang -->
       <p class="top__clock">Serang, <span id="clock">--:--</span> WIB</p>
       <nav class="top__nav">
@@ -33,6 +34,7 @@
         </div>
 
         <!-- 2) Ganti nama kalian di sini, terus push ke main.
+             Nama di pojok kiri atas sama footer otomatis ikut ganti.
              Kata di dalam <em> jadi miring. Hapus <em> kalau nggak mau. -->
         <h1 class="hero__name" data-split>Nama <em>Kalian</em></h1>
 
@@ -140,7 +142,7 @@
     </main>
 
     <footer class="footer">
-      <p>© <span id="year"></span> Nama Kalian</p>
+      <p>© <span id="year"></span> <span data-name>Nama Kalian</span></p>
       <p class="build">Versi build: <span id="build-time"></span></p>
       <a class="footer__top magnetic" href="#awal">Ke atas ↑</a>
     </footer>

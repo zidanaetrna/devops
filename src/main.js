@@ -8,7 +8,17 @@ import '@fontsource/instrument-serif/400-italic.css'
 document.getElementById('build-time').textContent = __BUILD_TIME__
 document.getElementById('year').textContent = new Date().getFullYear()
 
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+// ---------- Nama cukup ditulis sekali di <h1> ----------
+// Pojok kiri atas sama footer ([data-name]) otomatis ngikut.
+// Judul tab juga ikut, tapi cuma kalau <title> masih bawaan ("Nama Kalian").
+const heroNameEl = document.querySelector('.hero__name')
+const fullName = heroNameEl?.textContent.replace(/\s+/g, ' ').trim()
+if (fullName) {
+  document.querySelectorAll('[data-name]').forEach((el) => (el.textContent = fullName))
+  if (document.title.trim() === 'Nama Kalian') document.title = fullName
+}
+
+const reduceMotion =window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
 
 // ---------- Jam lokal di header ----------

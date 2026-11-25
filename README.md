@@ -108,8 +108,8 @@ Web ini udah berbentuk portofolio. Semua isinya ada di `index.html`, tinggal gan
 
 | Mau ganti | Di mana |
 |---|---|
-| Nama, judul tab | `index.html`: `<title>` sama `<h1 class="hero__name">`. Kata di dalam `<em>` jadi miring dan berwarna |
-| Nama di pojok kiri atas | `index.html`: `top__name` |
+| Nama | `index.html`: `<h1 class="hero__name">`. Cukup di sini. Nama di pojok kiri atas, footer, sama judul tab otomatis ikut. Kata di dalam `<em>` jadi miring dan berwarna |
+| Judul tab (kalau mau beda dari nama) | `index.html`: `<title>` |
 | Kota di jam header | `index.html`: `top__clock` |
 | Bio sama info singkat | `index.html`: bagian `PEMBUKA` |
 | Proyek | `index.html`: bagian `KARYA`, satu proyek = satu `<li>`. Copy buat nambah |
