@@ -70,42 +70,46 @@ Repo kalian di GitHub → **Settings** → **Secrets and variables** → **Actio
 3. Tunggu sampai semua step hijau (biasanya 1–2 menit). Klik tiap step buat liat apa yang dikerjain.
 4. Buka URL Netlify kalian: `https://<nama-project>.netlify.app`. Ada juga di dashboard Netlify.
 
-## 5. Ganti nama, push, cek
+## 5. Ganti nama di branch
 
-1. Buka `index.html`, cari `<h1 class="hero__name"`, terus ganti `Nama <em>Kalian</em>` pakai nama kalian. Cukup di situ, nama di pojok kiri atas, footer, sama judul tab ikut ganti otomatis.
+Kerjanya nggak langsung di `main`, tapi di branch, kayak di tim beneran.
+
+1. Bikin branch baru:
+
+   ```
+   git checkout -b ganti-nama
+   ```
+
+2. Buka `index.html`, cari `<h1 class="hero__name"`, terus ganti `Nama <em>Kalian</em>` pakai nama kalian. Cukup di situ, nama di pojok kiri atas, footer, sama judul tab ikut ganti otomatis.
 
    ```html
    <h1 class="hero__name" data-split>Budi <em>Santoso</em></h1>
    ```
 
-2. Push dari terminal, satu per satu:
+3. Commit terus push branch-nya, satu per satu:
 
-```
-git add .
-git commit -m "ganti nama"
-git push
-```
+   ```
+   git commit -am "ganti nama"
+   git push -u origin ganti-nama
+   ```
 
-Pertama kali push, Git bakal buka browser buat login GitHub. Login aja, itu normal.
+   Pertama kali push, Git bakal buka browser buat login GitHub. Login aja, itu normal.
 
-3. Tab **Actions** → tunggu hijau → refresh web kalian. Nama kalian sama tulisan **Versi build** di bawah halaman harus udah berubah. Kalau Versi build berubah tapi nama nggak, berarti file yang kalian edit belum ke-commit.
+Web kalian **belum** berubah. Perubahannya masih di branch `ganti-nama`, belum masuk `main`.
 
-## 6. Bonus: lewat branch dan Pull Request
+## 6. Dari Pull Request sampai main
 
-```
-git checkout -b ganti-warna
-```
+1. Buka repo kalian di GitHub, klik tombol **Compare & pull request** → **Create pull request**.
+2. Buka tab **Actions**. Workflow jalan, tapi **cuma build**: step **Deploy ke Netlify** ke-skip. Ini CI, kodenya dicek dulu sebelum boleh masuk `main`.
+3. Balik ke Pull request-nya. Kalau build-nya hijau, klik **Merge pull request** → **Confirm merge**.
+4. Tab **Actions** lagi: workflow jalan di `main`, kali ini **sampai deploy**. Ini CD.
+5. Refresh web kalian. Nama kalian sama tulisan **Versi build** di bawah halaman harus udah berubah.
+6. Di laptop, balik ke `main` dan ambil versi terbaru:
 
-Edit warna di `src/style.css`, terus:
-
-```
-git commit -am "ganti warna"
-git push -u origin ganti-warna
-```
-
-Di GitHub, klik **Compare & pull request** → **Create pull request**. Workflow jalan, tapi cuma build. Step **Deploy ke Netlify** ke-skip. Web kalian belum berubah.
-
-Klik **Merge pull request**. Workflow jalan lagi di `main`, kali ini sampai deploy.
+   ```
+   git checkout main
+   git pull
+   ```
 
 ## Jadiin portofolio kalian
 
